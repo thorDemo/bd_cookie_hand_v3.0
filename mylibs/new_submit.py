@@ -42,7 +42,7 @@ class BaiduSubmit:
                         success_count += 1
                     expire_count -= 1
             except Exception as e:
-                traceback.print_exc(E)
+                traceback.print_exc(e)
                 failure_count += 1
                 print('服务器异常')
                 time.sleep(3)
