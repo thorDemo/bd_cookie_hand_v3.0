@@ -26,6 +26,7 @@ class BaiduSubmit:
         while expire_count > 0:
             url = ''
             code = 233
+            status = 0
             try:
                 url = PushTool.rand_all(target)
                 resp, url = self._do_submit(url, _cookies)
@@ -35,6 +36,7 @@ class BaiduSubmit:
                 else:
                     resp_entity = json.loads(resp.text)
                     if "status" not in resp_entity or resp_entity["status"] != 0:
+                        status = resp_entity["status"]
                         failure_count += 1
                     else:
                         success_count += 1
@@ -50,14 +52,13 @@ class BaiduSubmit:
                 speed_sec = success_count / 1
             else:
                 speed_sec = success_count / int(spend.seconds)
-            speed_day = float('%.2f' % ((speed_sec * 60 * 60 * 24) / 10000000))
             percent = success_count / (failure_count + success_count) * 100
             sys.stdout.write(' ' * 100 + '\r')
             sys.stdout.flush()
             print(url)
             sys.stdout.write(
-                '%s 成功%s 预计(day/千万):%s M 成功率:%.2f%% 状态码:%s\r' %
-                (datetime.now(), success_count, speed_day, percent, code))
+                '%s 成功%s 成功率:%.2f%% 状态码:%s 返回值: %s \r' %
+                (datetime.now(), success_count, percent, code, status))
             sys.stdout.flush()
 
     def _do_submit(self, url, _cookie):
