@@ -7,6 +7,7 @@ from configparser import ConfigParser
 from datetime import datetime
 import time
 import traceback
+from requests.exceptions import ReadTimeout
 
 config = ConfigParser()
 config.read('config.ini', 'utf-8')
@@ -42,7 +43,7 @@ class BaiduSubmit:
                         success_count += 1
                     expire_count -= 1
             except Exception as e:
-                traceback.print_exc(e)
+                # traceback.print_exc(e)
                 failure_count += 1
                 print('服务器异常')
                 time.sleep(3)
@@ -69,9 +70,13 @@ class BaiduSubmit:
                    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7,mr;q=0.6",
                    "Cookie": _cookie,
                    }
-        resp = requests.post(url="https://ziyuan.baidu.com/linksubmit/urlsubmit",
-                             data={"url": url},
-                             headers=headers,
-                             # proxies=self._proxy,
-                             timeout=10)
+        try:
+            resp = requests.post(url="https://ziyuan.baidu.com/linksubmit/urlsubmit",
+                                 data={"url": url},
+                                 headers=headers,
+                                 # proxies=self._proxy,
+                                 timeout=10)
+        except ReadTimeout:
+            print('超时')
+            return
         return resp, url
