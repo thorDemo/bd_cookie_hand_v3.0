@@ -27,7 +27,7 @@ class BaiduSubmit:
         while expire_count > 0:
             url = ''
             code = 233
-            status = 0
+            status = 1
             try:
                 url = PushTool.rand_all(target)
                 resp, url = self._do_submit(url, _cookies)
