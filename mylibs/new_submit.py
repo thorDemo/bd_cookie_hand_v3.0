@@ -46,19 +46,13 @@ class BaiduSubmit:
                 failure_count += 1
                 print('服务器异常')
                 time.sleep(3)
-            this_time = datetime.now()
-            spend = this_time - start_time
-            if int(spend.seconds) == 0:
-                speed_sec = success_count / 1
-            else:
-                speed_sec = success_count / int(spend.seconds)
             percent = success_count / (failure_count + success_count) * 100
             sys.stdout.write(' ' * 100 + '\r')
             sys.stdout.flush()
             print(url)
             sys.stdout.write(
-                '%s 成功%s 成功率:%.2f%% 状态码:%s 返回值: %s \r' %
-                (datetime.now(), success_count, percent, code, status))
+                '%s 成功%s 失败%s 成功率:%.2f%% 状态码:%s 返回值: %s \r' %
+                (datetime.now(), success_count, failure_count, percent, code, status))
             sys.stdout.flush()
 
     def _do_submit(self, url, _cookie):
