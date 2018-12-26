@@ -16,7 +16,7 @@ config.read('config.ini', 'utf-8')
 target = config.get('bd_push', 'target')
 
 
-_COOKIE_FILE = "mylibs/cookie.txt"
+_COOKIE_FILE = "mylibs/thor_cookie.txt"
 _COOKIE_FILE_INVALID = "mylibs/cookie-invalid.txt"
 _COOKIE_EXPIRE_COUNT = 10
 _THREAD_SIZE = 2
