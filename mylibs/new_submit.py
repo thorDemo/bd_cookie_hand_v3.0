@@ -55,7 +55,7 @@ class BaiduSubmit:
             percent = success_count / (failure_count + success_count) * 100
             sys.stdout.write(' ' * 100 + '\r')
             sys.stdout.flush()
-            print(status, url, cookie)
+            print(status, url, _cookies)
             sys.stdout.write(
                 '%s 成功%s 失败%s 成功率:%.2f%% 状态码:%s 返回值: %s \r' %
                 (datetime.now(), success_count, failure_count, percent, code, status))
@@ -81,7 +81,7 @@ class BaiduSubmit:
                                  data={"url": url},
                                  headers=headers,
                                  # proxies=proxy,
-                                 timeout=1)
+                                 timeout=10)
         except (ReadTimeout, ConnectionError):
             print('超时')
             return
