@@ -76,15 +76,11 @@ class BaiduSubmit:
                    "Cookie": _cookie,
                    }
         try:
-            proxy = {'http': 'http://60.217.153.75:8060'}
-            try:
-                proxy['http'] = 'http://%s' % str(self.my_proxy(), encoding='utf-8').strip('')
-            except:
-                print('\033[31;1m本地链接超时 重试！！！！！！')
+
             resp = requests.post(url="https://ziyuan.baidu.com/linksubmit/urlsubmit",
                                  data={"url": url},
                                  headers=headers,
-                                 proxies=proxy,
+                                 # proxies=proxy,
                                  timeout=1)
         except (ReadTimeout, ConnectionError):
             print('超时')
