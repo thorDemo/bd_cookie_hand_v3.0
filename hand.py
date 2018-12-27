@@ -13,11 +13,9 @@ def main():
         config = ConfigParser()
         config.read('config.ini', 'utf-8')
         thread_num = int(config.get('bd_push', 'thread'))
-        target = config.get('bd_push', 'target')
+        cookie_file = config.get('bd_push', 'cookie_file')
         pool = ThreadPool(thread_num)
-        arg = []
-        for x in range(0, thread_num):
-            arg.append(target)
+        arg = open(cookie_file, 'r', encoding='utf-8')
         sub = BaiduSubmit()
         request = makeRequests(sub.submit, arg)
         [pool.putRequest(req) for req in request]
