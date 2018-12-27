@@ -15,7 +15,10 @@ def main():
         thread_num = int(config.get('bd_push', 'thread'))
         cookie_file = config.get('bd_push', 'cookie_file')
         pool = ThreadPool(thread_num)
-        arg = open(cookie_file, 'r', encoding='utf-8')
+        arg = []
+        cookie = open(cookie_file, 'r+', encoding='UTF-8')
+        for x in cookie:
+            arg.append(x.strip())
         sub = BaiduSubmit()
         request = makeRequests(sub.submit, arg)
         [pool.putRequest(req) for req in request]

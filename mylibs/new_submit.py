@@ -50,12 +50,12 @@ class BaiduSubmit:
             except Exception as e:
                 # traceback.print_exc(e)
                 failure_count += 1
-                print('服务器异常')
-                time.sleep(3)
+                # print('服务器异常')
+                # time.sleep(3)
             percent = success_count / (failure_count + success_count) * 100
             sys.stdout.write(' ' * 100 + '\r')
             sys.stdout.flush()
-            print(status, url, _cookies)
+            print(status, code, url, _cookies)
             sys.stdout.write(
                 '%s 成功%s 失败%s 成功率:%.2f%% 状态码:%s 返回值: %s \r' %
                 (datetime.now(), success_count, failure_count, percent, code, status))
@@ -76,12 +76,16 @@ class BaiduSubmit:
                    "Cookie": _cookie,
                    }
         try:
-
+            # proxy = {'http': 'http://60.217.153.75:8060'}
+            # try:
+            #     proxy['http'] = 'http://%s' % str(self.my_proxy(), encoding='utf-8').strip('')
+            # except:
+            #     print('\033[31;1m本地链接超时 重试！！！！！！')
             resp = requests.post(url="https://ziyuan.baidu.com/linksubmit/urlsubmit",
                                  data={"url": url},
                                  headers=headers,
                                  # proxies=proxy,
-                                 timeout=10)
+                                 timeout=1)
         except (ReadTimeout, ConnectionError):
             print('超时')
             return
