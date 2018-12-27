@@ -16,7 +16,7 @@ config.read('config.ini', 'utf-8')
 target = config.get('bd_push', 'target')
 
 
-_COOKIE_FILE = "mylibs/thor_cookie.txt"
+_COOKIE_FILE = "mylibs/bieber_cookie.txt"
 _COOKIE_FILE_INVALID = "mylibs/cookie-invalid.txt"
 _COOKIE_EXPIRE_COUNT = 10
 _THREAD_SIZE = 2
@@ -38,6 +38,9 @@ class BaiduSubmit:
             self._refill_cookies()
         self._cookie = self._cookies.pop()
         print("change cookie")
+
+    def _proxy(self):
+        return requests.get("http://127.0.0.1:5010/get/").content
 
     def submit(self, _cookies):
         global target

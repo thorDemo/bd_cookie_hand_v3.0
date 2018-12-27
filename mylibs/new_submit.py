@@ -7,7 +7,7 @@ from configparser import ConfigParser
 from datetime import datetime
 import time
 import traceback
-from requests.exceptions import ReadTimeout
+from requests.exceptions import ReadTimeout, ConnectionError
 
 config = ConfigParser()
 config.read('config.ini', 'utf-8')
@@ -19,18 +19,24 @@ target = config.get('bd_push', 'target')
 
 
 class BaiduSubmit:
+    def my_proxy(self):
+        proxy = requests.get("http://127.0.0.1:5010/get/").content
+        return proxy
+
     def submit(self, _cookies):
         global target
         global failure_count
         global success_count
         expire_count = _COOKIE_EXPIRE_COUNT
         while expire_count > 0:
+            expire_count -= 1
             url = ''
             code = 233
             status = 1
+            cookie = ''
             try:
                 url = PushTool.rand_all(target)
-                resp, url = self._do_submit(url, _cookies)
+                resp, url, cookie = self._do_submit(url, _cookies)
                 code = resp.status_code
                 if code != 200:
                     failure_count += 1
@@ -41,7 +47,6 @@ class BaiduSubmit:
                         failure_count += 1
                     else:
                         success_count += 1
-                    expire_count -= 1
             except Exception as e:
                 # traceback.print_exc(e)
                 failure_count += 1
@@ -50,7 +55,7 @@ class BaiduSubmit:
             percent = success_count / (failure_count + success_count) * 100
             sys.stdout.write(' ' * 100 + '\r')
             sys.stdout.flush()
-            print(url)
+            print(status, url, cookie)
             sys.stdout.write(
                 '%s 成功%s 失败%s 成功率:%.2f%% 状态码:%s 返回值: %s \r' %
                 (datetime.now(), success_count, failure_count, percent, code, status))
@@ -71,12 +76,17 @@ class BaiduSubmit:
                    "Cookie": _cookie,
                    }
         try:
+            proxy = {'http': 'http://60.217.153.75:8060'}
+            try:
+                proxy['http'] = 'http://%s' % str(self.my_proxy(), encoding='utf-8').strip('')
+            except:
+                print('\033[31;1m本地链接超时 重试！！！！！！')
             resp = requests.post(url="https://ziyuan.baidu.com/linksubmit/urlsubmit",
                                  data={"url": url},
                                  headers=headers,
-                                 # proxies=self._proxy,
-                                 timeout=10)
-        except ReadTimeout:
+                                 proxies=proxy,
+                                 timeout=1)
+        except (ReadTimeout, ConnectionError):
             print('超时')
             return
-        return resp, url
+        return resp, url, headers['Cookie']

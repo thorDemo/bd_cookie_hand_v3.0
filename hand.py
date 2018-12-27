@@ -1,6 +1,7 @@
 from threadpool import ThreadPool, makeRequests
 from configparser import ConfigParser
-from mylibs.hand_with_cookie import BaiduSubmit
+# from mylibs.hand_with_cookie import BaiduSubmit
+from mylibs.new_submit import BaiduSubmit
 import datetime
 import time
 
